@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "magicwand",
+  "version": "${version}",
+  "name": "Magic Wand",
+  "description": "Right-click to shoot a fireball. Sneak + right-click to teleport forward.",
+  "authors": ["You"],
+  "license": "MIT",
+  "icon": "assets/magicwand/textures/item/magic_wand.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["com.example.magicwand.MagicWandMod"]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.10",
+    "minecraft": "~1.21.4",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
