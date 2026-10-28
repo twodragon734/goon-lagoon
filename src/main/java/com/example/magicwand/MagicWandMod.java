@@ -22,13 +22,19 @@ public class MagicWandMod implements ModInitializer {
     public static Item ICE_WAND;
     public static Item WIND_WAND;
     public static Item HEAL_WAND;
+    public static Item SPEEDSTER_SCROLL;
+    public static Item DRILL_SCROLL;
 
     private static Item register(String name, Function<Item.Settings, Item> factory) {
+        return register(name, Rarity.EPIC, factory);
+    }
+
+    private static Item register(String name, Rarity rarity, Function<Item.Settings, Item> factory) {
         RegistryKey<Item> key = RegistryKey.of(RegistryKeys.ITEM, Identifier.of(MOD_ID, name));
         Item.Settings settings = new Item.Settings()
                 .registryKey(key)
                 .maxCount(1)
-                .rarity(Rarity.EPIC)
+                .rarity(rarity)
                 .component(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true);
         return Registry.register(Registries.ITEM, key, factory.apply(settings));
     }
@@ -41,12 +47,19 @@ public class MagicWandMod implements ModInitializer {
         WIND_WAND = register("wind_wand", s -> new ElementWandItem(s, ElementWandItem.Kind.WIND));
         HEAL_WAND = register("heal_wand", s -> new ElementWandItem(s, ElementWandItem.Kind.HEAL));
 
+        SPEEDSTER_SCROLL = register("speedster_scroll", Rarity.RARE, s -> new ScrollItem(s, ScrollItem.Kind.SPEED));
+        DRILL_SCROLL = register("drill_scroll", Rarity.RARE, s -> new ScrollItem(s, ScrollItem.Kind.DRILL));
+
+        DrillManager.init();
+
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {
             entries.add(MAGIC_WAND);
             entries.add(LIGHTNING_WAND);
             entries.add(ICE_WAND);
             entries.add(WIND_WAND);
             entries.add(HEAL_WAND);
+            entries.add(SPEEDSTER_SCROLL);
+            entries.add(DRILL_SCROLL);
         });
     }
 }

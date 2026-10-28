@@ -3,7 +3,7 @@
   "id": "magicwand",
   "version": "${version}",
   "name": "Magic Wand",
-  "description": "Five magic wands: fireball/teleport, lightning, ice, wind and healing.",
+  "description": "Five magic wands plus infinite spell scrolls: speed and drill.",
   "authors": ["You"],
   "license": "MIT",
   "icon": "assets/magicwand/textures/item/magic_wand.png",

@@ -3,5 +3,7 @@
   "item.magicwand.lightning_wand": "Lightning Wand",
   "item.magicwand.ice_wand": "Ice Wand",
   "item.magicwand.wind_wand": "Wind Wand",
-  "item.magicwand.heal_wand": "Heal Wand"
+  "item.magicwand.heal_wand": "Heal Wand",
+  "item.magicwand.speedster_scroll": "Speedster Scroll",
+  "item.magicwand.drill_scroll": "Drill Scroll"
 }
