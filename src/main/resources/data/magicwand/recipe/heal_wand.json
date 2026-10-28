@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "  P",
+    " B ",
+    "B  "
+  ],
+  "key": {
+    "P": "minecraft:golden_apple",
+    "B": "minecraft:blaze_rod"
+  },
+  "result": {
+    "id": "magicwand:heal_wand",
+    "count": 1
+  }
+}

@@ -3,7 +3,7 @@
   "id": "magicwand",
   "version": "${version}",
   "name": "Magic Wand",
-  "description": "Right-click to shoot a fireball. Sneak + right-click to teleport forward.",
+  "description": "Five magic wands: fireball/teleport, lightning, ice, wind and healing.",
   "authors": ["You"],
   "license": "MIT",
   "icon": "assets/magicwand/textures/item/magic_wand.png",

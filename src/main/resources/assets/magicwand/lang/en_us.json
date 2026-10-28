@@ -1,3 +1,7 @@
 {
-  "item.magicwand.magic_wand": "Magic Wand"
+  "item.magicwand.magic_wand": "Magic Wand",
+  "item.magicwand.lightning_wand": "Lightning Wand",
+  "item.magicwand.ice_wand": "Ice Wand",
+  "item.magicwand.wind_wand": "Wind Wand",
+  "item.magicwand.heal_wand": "Heal Wand"
 }
