@@ -7,5 +7,7 @@
   "item.magicwand.speedster_scroll": "Speedster Scroll",
   "item.magicwand.drill_scroll": "Drill Scroll",
   "key.magicwand.upgrades": "Open Upgrade Tree",
-  "category.magicwand": "Magic Wands"
+  "category.magicwand": "Magic Wands",
+  "item.magicwand.mana_potion": "Mana Potion",
+  "item.magicwand.splash_mana_potion": "Splash Mana Potion"
 }

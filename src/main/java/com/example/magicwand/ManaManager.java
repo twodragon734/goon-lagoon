@@ -102,6 +102,17 @@ public final class ManaManager {
         sync(p, true);
     }
 
+    /** Adds mana directly (potions). Never goes above the player's maximum. */
+    public static void addMana(PlayerEntity user, int amount) {
+        if (!(user instanceof ServerPlayerEntity p)) {
+            return;
+        }
+        float max = maxMana(p);
+        float m = MANA.getOrDefault(p.getUuid(), max);
+        MANA.put(p.getUuid(), Math.min(max, m + amount));
+        sync(p, true);
+    }
+
     public static void forceSync(ServerPlayerEntity p) {
         sync(p, true);
     }

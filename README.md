@@ -40,3 +40,10 @@ Spend XP levels to unlock and improve powers. Each wand and scroll has its own p
 The fireball is free; every other wand/scroll power must be unlocked first.
 Upgrades are saved in the world folder (magicwand_upgrades.json). Creative mode buys upgrades for free.
 Handy for testing: /xp add @s 50 levels
+
+## Mana potions
+
+| Potion | Recipe | Effect |
+|---|---|---|
+| Mana Potion | glass bottle + 2 lapis lazuli + glowstone dust (shapeless) | drink: +50 mana, returns the bottle |
+| Splash Mana Potion | mana potion + gunpowder (shapeless) | throw: +40 mana to everyone within 4 blocks of the splash |

@@ -4,8 +4,10 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.ConsumableComponents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
+import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -25,6 +27,8 @@ public class MagicWandMod implements ModInitializer {
     public static Item HEAL_WAND;
     public static Item SPEEDSTER_SCROLL;
     public static Item DRILL_SCROLL;
+    public static Item MANA_POTION;
+    public static Item SPLASH_MANA_POTION;
 
     private static Item register(String name, Function<Item.Settings, Item> factory) {
         return register(name, Rarity.EPIC, factory);
@@ -51,6 +55,14 @@ public class MagicWandMod implements ModInitializer {
         SPEEDSTER_SCROLL = register("speedster_scroll", Rarity.RARE, s -> new ScrollItem(s, ScrollItem.Kind.SPEED));
         DRILL_SCROLL = register("drill_scroll", Rarity.RARE, s -> new ScrollItem(s, ScrollItem.Kind.DRILL));
 
+        MANA_POTION = register("mana_potion", Rarity.UNCOMMON, s -> new ManaPotionItem(
+                s.maxCount(16)
+                        .component(DataComponentTypes.CONSUMABLE, ConsumableComponents.drink().build())
+                        .useRemainder(Items.GLASS_BOTTLE),
+                50));
+        SPLASH_MANA_POTION = register("splash_mana_potion", Rarity.UNCOMMON,
+                s -> new SplashManaPotionItem(s.maxCount(16)));
+
         DrillManager.init();
 
         PayloadTypeRegistry.playS2C().register(ManaPayload.ID, ManaPayload.CODEC);
@@ -67,6 +79,8 @@ public class MagicWandMod implements ModInitializer {
             entries.add(HEAL_WAND);
             entries.add(SPEEDSTER_SCROLL);
             entries.add(DRILL_SCROLL);
+            entries.add(MANA_POTION);
+            entries.add(SPLASH_MANA_POTION);
         });
     }
 }
