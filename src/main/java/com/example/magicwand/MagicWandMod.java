@@ -54,7 +54,10 @@ public class MagicWandMod implements ModInitializer {
         DrillManager.init();
 
         PayloadTypeRegistry.playS2C().register(ManaPayload.ID, ManaPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(UpgradesPayload.ID, UpgradesPayload.CODEC);
+        PayloadTypeRegistry.playC2S().register(PurchasePayload.ID, PurchasePayload.CODEC);
         ManaManager.init();
+        UpgradeManager.init();
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {
             entries.add(MAGIC_WAND);

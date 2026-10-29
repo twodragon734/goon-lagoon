@@ -16,9 +16,9 @@ import net.minecraft.world.World;
 
 public class MagicWandItem extends Item {
     // ---- Tweak these to taste ----
-    private static final int FIREBALL_COOLDOWN_TICKS = 10;   // 20 ticks = 1 second
+    private static final int FIREBALL_BASE_COOLDOWN_TICKS = 10; // 20 ticks = 1 second; -2 per Quick Fire level
     private static final int TELEPORT_COOLDOWN_TICKS = 40;
-    private static final double TELEPORT_MAX_DISTANCE = 12.0; // blocks
+    private static final double TELEPORT_BASE_DISTANCE = 12.0;  // blocks; +4 per Long Blink level
     private static final int FIREBALL_MANA_COST = 10;
     private static final int TELEPORT_MANA_COST = 25;
     // ------------------------------
@@ -34,20 +34,27 @@ public class MagicWandItem extends Item {
         }
         ItemStack stack = user.getStackInHand(hand);
         boolean sneaking = user.isSneaking();
-        int cost = sneaking ? TELEPORT_MANA_COST : FIREBALL_MANA_COST;
 
+        if (sneaking && UpgradeManager.level(user, "teleport") < 1) {
+            UpgradeManager.sendLocked(user, "teleport");
+            return ActionResult.FAIL;
+        }
+
+        int cost = sneaking ? TELEPORT_MANA_COST : FIREBALL_MANA_COST;
         if (!ManaManager.tryUse(user, cost)) {
             return ActionResult.FAIL;
         }
 
         if (sneaking) {
-            if (!teleport(sw, user)) {
+            double distance = TELEPORT_BASE_DISTANCE + 4.0 * UpgradeManager.level(user, "blink_range");
+            if (!teleport(sw, user, distance)) {
                 ManaManager.refund(user, cost); // fizzled, so no mana lost
             }
             user.getItemCooldownManager().set(stack, TELEPORT_COOLDOWN_TICKS);
         } else {
             shootFireball(sw, user);
-            user.getItemCooldownManager().set(stack, FIREBALL_COOLDOWN_TICKS);
+            int cooldown = Math.max(2, FIREBALL_BASE_COOLDOWN_TICKS - 2 * UpgradeManager.level(user, "quick_fire"));
+            user.getItemCooldownManager().set(stack, cooldown);
         }
         return ActionResult.SUCCESS;
     }
@@ -65,12 +72,12 @@ public class MagicWandItem extends Item {
     }
 
     /** Returns false if something blocked the teleport. */
-    private boolean teleport(ServerWorld world, PlayerEntity user) {
+    private boolean teleport(ServerWorld world, PlayerEntity user, double maxDistance) {
         Vec3d look = user.getRotationVec(1.0F);
         Box box = user.getBoundingBox();
 
         double bestDistance = 0;
-        for (double d = 0.5; d <= TELEPORT_MAX_DISTANCE; d += 0.5) {
+        for (double d = 0.5; d <= maxDistance; d += 0.5) {
             Box moved = box.offset(look.multiply(d));
             if (!world.isSpaceEmpty(user, moved)) {
                 break;

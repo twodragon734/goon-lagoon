@@ -3,7 +3,7 @@
   "id": "magicwand",
   "version": "${version}",
   "name": "Magic Wand",
-  "description": "Magic wands, spell scrolls and a mana bar.",
+  "description": "Magic wands, spell scrolls, mana and an upgrade tree (press U).",
   "authors": [
     "You"
   ],

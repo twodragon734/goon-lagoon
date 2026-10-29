@@ -20,19 +20,36 @@ public final class ManaManager {
     private ManaManager() {}
 
     // ---- Tweak these to taste ----
-    public static final int MAX_MANA = 100;
-    private static final float REGEN_PER_TICK = 0.15F; // 3 mana per second (full bar in about 33 s)
+    public static final int MAX_MANA = 100;                 // starting maximum
+    private static final float BASE_REGEN_PER_TICK = 0.15F; // 3 mana per second
     // ------------------------------
 
     private static final Map<UUID, Float> MANA = new HashMap<>();
     private static final Map<UUID, Integer> LAST_SENT = new HashMap<>();
 
+    public static int maxMana(PlayerEntity p) {
+        return MAX_MANA + 20 * UpgradeManager.level(p, "mana_capacity");
+    }
+
+    private static float regenPerTick(PlayerEntity p) {
+        return BASE_REGEN_PER_TICK + 0.05F * UpgradeManager.level(p, "mana_regen"); // +1/sec per level
+    }
+
+    /** The real cost after the Mana Efficiency upgrade. */
+    public static int effectiveCost(PlayerEntity p, int cost) {
+        float factor = 1.0F - 0.1F * UpgradeManager.level(p, "mana_efficiency");
+        return Math.max(1, Math.round(cost * factor));
+    }
+
     public static void init() {
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             for (ServerPlayerEntity p : server.getPlayerManager().getPlayerList()) {
-                float m = MANA.getOrDefault(p.getUuid(), (float) MAX_MANA);
-                if (m < MAX_MANA) {
-                    m = Math.min(MAX_MANA, m + REGEN_PER_TICK);
+                float max = maxMana(p);
+                float m = MANA.getOrDefault(p.getUuid(), max);
+                if (m < max) {
+                    m = Math.min(max, m + regenPerTick(p));
+                } else if (m > max) {
+                    m = max;
                 }
                 MANA.put(p.getUuid(), m);
                 sync(p, false);
@@ -41,7 +58,7 @@ public final class ManaManager {
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             ServerPlayerEntity p = handler.player;
-            MANA.put(p.getUuid(), (float) MAX_MANA);
+            MANA.put(p.getUuid(), (float) maxMana(p));
             sync(p, true);
         });
 
@@ -57,11 +74,12 @@ public final class ManaManager {
     }
 
     /** Spends mana if the player has enough. If not, tells them and returns false. */
-    public static boolean tryUse(PlayerEntity user, int cost) {
+    public static boolean tryUse(PlayerEntity user, int baseCost) {
         if (!(user instanceof ServerPlayerEntity p)) {
             return true;
         }
-        float m = MANA.getOrDefault(p.getUuid(), (float) MAX_MANA);
+        int cost = effectiveCost(p, baseCost);
+        float m = MANA.getOrDefault(p.getUuid(), (float) maxMana(p));
         if (m < cost) {
             p.sendMessage(Text.literal("Not enough mana!").formatted(Formatting.RED), true);
             p.getWorld().playSound(null, p.getBlockPos(), SoundEvents.BLOCK_DISPENSER_FAIL,
@@ -73,20 +91,25 @@ public final class ManaManager {
         return true;
     }
 
-    /** Gives mana back, for example when a teleport fizzles. */
-    public static void refund(PlayerEntity user, int amount) {
+    /** Gives back what a spell of this base cost charged, for example when a teleport fizzles. */
+    public static void refund(PlayerEntity user, int baseCost) {
         if (!(user instanceof ServerPlayerEntity p)) {
             return;
         }
-        float m = MANA.getOrDefault(p.getUuid(), (float) MAX_MANA);
-        MANA.put(p.getUuid(), Math.min(MAX_MANA, m + amount));
+        float max = maxMana(p);
+        float m = MANA.getOrDefault(p.getUuid(), max);
+        MANA.put(p.getUuid(), Math.min(max, m + effectiveCost(p, baseCost)));
+        sync(p, true);
+    }
+
+    public static void forceSync(ServerPlayerEntity p) {
         sync(p, true);
     }
 
     private static void sync(ServerPlayerEntity p, boolean force) {
-        int current = (int) Math.floor(MANA.getOrDefault(p.getUuid(), (float) MAX_MANA));
+        int current = (int) Math.floor(MANA.getOrDefault(p.getUuid(), (float) maxMana(p)));
         if (force || LAST_SENT.getOrDefault(p.getUuid(), -1) != current) {
-            ServerPlayNetworking.send(p, new ManaPayload(current, MAX_MANA));
+            ServerPlayNetworking.send(p, new ManaPayload(current, maxMana(p)));
             LAST_SENT.put(p.getUuid(), current);
         }
     }

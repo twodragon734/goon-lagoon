@@ -40,7 +40,6 @@ public class ElementWandItem extends Item {
             case HEAL -> 60;
         };
     }
-    // -----------------------------------------------------
 
     private int manaCost(PlayerEntity user) {
         return switch (kind) {
@@ -50,6 +49,16 @@ public class ElementWandItem extends Item {
             case HEAL -> 25;
         };
     }
+    // -----------------------------------------------------
+
+    private String requiredUpgrade(PlayerEntity user) {
+        return switch (kind) {
+            case LIGHTNING -> "lightning_strike";
+            case ICE -> "frost_bolt";
+            case WIND -> user.isSneaking() ? "tempest" : "gust";
+            case HEAL -> "healing_touch";
+        };
+    }
 
     @Override
     public ActionResult use(World world, PlayerEntity user, Hand hand) {
@@ -57,6 +66,12 @@ public class ElementWandItem extends Item {
             return ActionResult.SUCCESS;
         }
         ItemStack stack = user.getStackInHand(hand);
+
+        String required = requiredUpgrade(user);
+        if (UpgradeManager.level(user, required) < 1) {
+            UpgradeManager.sendLocked(user, required);
+            return ActionResult.FAIL;
+        }
 
         if (!ManaManager.tryUse(user, manaCost(user))) {
             return ActionResult.FAIL;
@@ -74,20 +89,34 @@ public class ElementWandItem extends Item {
 
     // ---------------- Lightning: strike where you look ----------------
     private void lightning(ServerWorld world, PlayerEntity user) {
-        WandUtil.Aim aim = WandUtil.aim(world, user, 60, false);
+        double range = 60 + 20.0 * UpgradeManager.level(user, "long_reach");
+        int strikes = 1 + UpgradeManager.level(user, "storm_caller");
+
+        WandUtil.Aim aim = WandUtil.aim(world, user, range, false);
         Vec3d p = aim.point();
-        LightningEntity bolt = EntityType.LIGHTNING_BOLT.create(world, SpawnReason.TRIGGERED);
-        if (bolt != null) {
-            bolt.refreshPositionAfterTeleport(p.x, p.y, p.z);
-            if (user instanceof ServerPlayerEntity sp) {
-                bolt.setChanneler(sp);
+
+        for (int i = 0; i < strikes; i++) {
+            Vec3d spot = p;
+            if (i > 0) {
+                // extra bolts land randomly near the target
+                spot = p.add((world.random.nextDouble() - 0.5) * 6.0, 0, (world.random.nextDouble() - 0.5) * 6.0);
             }
-            world.spawnEntity(bolt);
+            LightningEntity bolt = EntityType.LIGHTNING_BOLT.create(world, SpawnReason.TRIGGERED);
+            if (bolt != null) {
+                bolt.refreshPositionAfterTeleport(spot.x, spot.y, spot.z);
+                if (user instanceof ServerPlayerEntity sp) {
+                    bolt.setChanneler(sp);
+                }
+                world.spawnEntity(bolt);
+            }
         }
     }
 
     // ---------------- Ice: freeze mobs, water, and cover ground in snow ----------------
     private void ice(ServerWorld world, PlayerEntity user) {
+        int freezeTicks = 120 + 60 * UpgradeManager.level(user, "deep_freeze");
+        int radius = 2 + UpgradeManager.level(user, "blizzard");
+
         WandUtil.Aim aim = WandUtil.aim(world, user, 30, true);
         Vec3d p = aim.point();
 
@@ -97,16 +126,16 @@ public class ElementWandItem extends Item {
                 SoundCategory.PLAYERS, 0.8F, 1.6F);
 
         if (aim.entity() instanceof LivingEntity target) {
-            target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 120, 6), user);
-            target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 120, 0), user);
-            target.setFrozenTicks(200);
+            target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, freezeTicks, 6), user);
+            target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, freezeTicks, 0), user);
+            target.setFrozenTicks(freezeTicks + 80);
             target.damage(world, world.getDamageSources().freeze(), 3.0F);
             world.spawnParticles(ParticleTypes.SNOWFLAKE, target.getX(), target.getBodyY(0.5), target.getZ(),
                     25, 0.4, 0.6, 0.4, 0.05);
         }
 
         BlockPos center = BlockPos.ofFloored(p);
-        for (BlockPos pos : BlockPos.iterate(center.add(-2, -1, -2), center.add(2, 1, 2))) {
+        for (BlockPos pos : BlockPos.iterate(center.add(-radius, -1, -radius), center.add(radius, 1, radius))) {
             BlockPos fixed = pos.toImmutable();
             if (world.getBlockState(fixed).isOf(Blocks.WATER)) {
                 world.setBlockState(fixed, Blocks.ICE.getDefaultState());
@@ -120,6 +149,7 @@ public class ElementWandItem extends Item {
     // ---------------- Wind: launch yourself, or sneak for a shockwave ----------------
     private void wind(ServerWorld world, PlayerEntity user) {
         Vec3d look = user.getRotationVec(1.0F);
+        double power = 1.0 + 0.2 * UpgradeManager.level(user, "lift_power");
 
         if (user.isSneaking()) {
             // Shockwave: push everything in front of you away
@@ -127,7 +157,7 @@ public class ElementWandItem extends Item {
                     user.getBoundingBox().expand(8.0), x -> x != user && x.isAlive())) {
                 Vec3d to = e.getPos().subtract(user.getPos());
                 if (to.length() > 8.0 || to.normalize().dotProduct(look) < 0.4) continue;
-                e.addVelocity(look.x * 2.0, 0.6, look.z * 2.0);
+                e.addVelocity(look.x * 2.0 * power, 0.6 * power, look.z * 2.0 * power);
                 e.velocityModified = true;
             }
             for (int i = 1; i <= 8; i++) {
@@ -136,7 +166,7 @@ public class ElementWandItem extends Item {
             }
         } else {
             // Launch yourself
-            user.setVelocity(look.x * 0.5, 1.2, look.z * 0.5);
+            user.setVelocity(look.x * 0.5, 1.2 * power, look.z * 0.5);
             user.velocityModified = true;
             user.fallDistance = 0;
             user.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOW_FALLING, 100, 0));
@@ -150,11 +180,14 @@ public class ElementWandItem extends Item {
 
     // ---------------- Heal: heal whatever you point at, or yourself ----------------
     private void heal(ServerWorld world, PlayerEntity user) {
+        float amount = 8.0F + 4.0F * UpgradeManager.level(user, "greater_heal");
+        int regenLevel = 1 + UpgradeManager.level(user, "renewal");
+
         WandUtil.Aim aim = WandUtil.aim(world, user, 20, false);
         LivingEntity target = aim.entity() instanceof LivingEntity le ? le : user;
 
-        target.heal(8.0F);
-        target.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 100, 1));
+        target.heal(amount);
+        target.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 100, regenLevel));
         world.spawnParticles(ParticleTypes.HEART, target.getX(), target.getBodyY(0.5) + 0.5, target.getZ(),
                 8, 0.4, 0.4, 0.4, 0.05);
         world.playSound(null, target.getBlockPos(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP,
