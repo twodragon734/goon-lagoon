@@ -18,3 +18,18 @@ Recipe: paper in the middle, 8 of the surrounding item.
 |---|---|---|---|
 | Speedster Scroll | 8 sugar | Speed III for 60 seconds | 90 seconds |
 | Drill Scroll | 8 iron ingots | Summons a drill that tunnels (about 3 wide, 30 long) where you face | 15 seconds |
+
+## Mana
+
+You have 100 mana (blue bar above your armor). It refills 3 per second and resets to full when you rejoin.
+Every spell costs mana; at 0 you can't cast.
+
+| Item | Mana cost |
+|---|---|
+| Magic Wand: fireball / teleport | 10 / 25 |
+| Lightning Wand | 30 |
+| Ice Wand | 15 |
+| Wind Wand: launch / shockwave | 20 / 25 |
+| Heal Wand | 25 |
+| Speedster Scroll | 40 |
+| Drill Scroll | 50 |

@@ -2,6 +2,7 @@ package com.example.magicwand;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
@@ -51,6 +52,9 @@ public class MagicWandMod implements ModInitializer {
         DRILL_SCROLL = register("drill_scroll", Rarity.RARE, s -> new ScrollItem(s, ScrollItem.Kind.DRILL));
 
         DrillManager.init();
+
+        PayloadTypeRegistry.playS2C().register(ManaPayload.ID, ManaPayload.CODEC);
+        ManaManager.init();
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {
             entries.add(MAGIC_WAND);

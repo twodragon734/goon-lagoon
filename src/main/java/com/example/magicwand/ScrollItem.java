@@ -31,15 +31,24 @@ public class ScrollItem extends Item {
     private static final int DRILL_COOLDOWN_TICKS = 300;  // 15 second cooldown
     // -----------------------------------------------------
 
+    private int manaCost() {
+        return kind == Kind.SPEED ? 40 : 50;
+    }
+
     @Override
     public ActionResult use(World world, PlayerEntity user, Hand hand) {
+        if (!(world instanceof ServerWorld sw)) {
+            return ActionResult.SUCCESS;
+        }
         ItemStack stack = user.getStackInHand(hand);
 
-        if (world instanceof ServerWorld sw) {
-            switch (kind) {
-                case SPEED -> speed(sw, user);
-                case DRILL -> DrillManager.start(sw, user);
-            }
+        if (!ManaManager.tryUse(user, manaCost())) {
+            return ActionResult.FAIL;
+        }
+
+        switch (kind) {
+            case SPEED -> speed(sw, user);
+            case DRILL -> DrillManager.start(sw, user);
         }
 
         int cooldown = kind == Kind.SPEED ? SPEED_COOLDOWN_TICKS : DRILL_COOLDOWN_TICKS;

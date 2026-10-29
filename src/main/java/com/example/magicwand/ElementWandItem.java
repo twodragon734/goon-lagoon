@@ -42,16 +42,31 @@ public class ElementWandItem extends Item {
     }
     // -----------------------------------------------------
 
+    private int manaCost(PlayerEntity user) {
+        return switch (kind) {
+            case LIGHTNING -> 30;
+            case ICE -> 15;
+            case WIND -> user.isSneaking() ? 25 : 20;
+            case HEAL -> 25;
+        };
+    }
+
     @Override
     public ActionResult use(World world, PlayerEntity user, Hand hand) {
+        if (!(world instanceof ServerWorld sw)) {
+            return ActionResult.SUCCESS;
+        }
         ItemStack stack = user.getStackInHand(hand);
-        if (world instanceof ServerWorld sw) {
-            switch (kind) {
-                case LIGHTNING -> lightning(sw, user);
-                case ICE -> ice(sw, user);
-                case WIND -> wind(sw, user);
-                case HEAL -> heal(sw, user);
-            }
+
+        if (!ManaManager.tryUse(user, manaCost(user))) {
+            return ActionResult.FAIL;
+        }
+
+        switch (kind) {
+            case LIGHTNING -> lightning(sw, user);
+            case ICE -> ice(sw, user);
+            case WIND -> wind(sw, user);
+            case HEAL -> heal(sw, user);
         }
         user.getItemCooldownManager().set(stack, cooldownTicks());
         return ActionResult.SUCCESS;

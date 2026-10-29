@@ -3,13 +3,20 @@
   "id": "magicwand",
   "version": "${version}",
   "name": "Magic Wand",
-  "description": "Five magic wands plus infinite spell scrolls: speed and drill.",
-  "authors": ["You"],
+  "description": "Magic wands, spell scrolls and a mana bar.",
+  "authors": [
+    "You"
+  ],
   "license": "MIT",
   "icon": "assets/magicwand/textures/item/magic_wand.png",
   "environment": "*",
   "entrypoints": {
-    "main": ["com.example.magicwand.MagicWandMod"]
+    "main": [
+      "com.example.magicwand.MagicWandMod"
+    ],
+    "client": [
+      "com.example.magicwand.MagicWandClient"
+    ]
   },
   "depends": {
     "fabricloader": ">=0.16.10",
