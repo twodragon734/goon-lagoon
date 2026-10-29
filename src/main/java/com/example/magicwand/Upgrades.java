@@ -15,7 +15,8 @@ public final class Upgrades {
         WIND("Wind"),
         HEAL("Heal"),
         SPEEDSTER("Speedster"),
-        DRILL("Drill");
+        DRILL("Drill"),
+        NUKE("Nuke"); // only shown while holding the Nuke Wand
 
         public final String label;
 
@@ -74,7 +75,13 @@ public final class Upgrades {
             // DRILL SCROLL
             u("drill_bore", Path.DRILL, "Drill", "Unlocks the Drill Scroll.", null, 6),
             u("deep_bore", Path.DRILL, "Deep Bore", "+15 blocks of drill distance per level.", "drill_bore", 4, 6, 8),
-            u("wide_bore", Path.DRILL, "Wide Bore", "Wider tunnel, +0.5 radius per level.", "drill_bore", 6, 10)
+            u("wide_bore", Path.DRILL, "Wide Bore", "Wider tunnel, +0.5 radius per level.", "drill_bore", 6, 10),
+
+            // NUKE WAND (hidden unless you are holding the Nuke Wand)
+            u("blast_power", Path.NUKE, "Blast Power", "+2 explosion power per level for the Big Blast.", null, 5, 8, 12),
+            u("incendiary", Path.NUKE, "Incendiary", "Blasts and nukes set the ground on fire.", null, 6),
+            u("nuke", Path.NUKE, "Nuke", "Unlocks sneak + right-click: a huge nuclear blast.", null, 15),
+            u("nuke_yield", Path.NUKE, "Nuke Yield", "+5 nuke explosion power per level.", "nuke", 12, 18)
     );
     // ----------------------------------
 

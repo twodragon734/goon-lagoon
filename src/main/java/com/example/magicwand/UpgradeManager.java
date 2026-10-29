@@ -70,6 +70,13 @@ public final class UpgradeManager {
         Upgrades.Upgrade up = Upgrades.get(id);
         if (up == null) return;
 
+        if (up.path() == Upgrades.Path.NUKE
+                && !(p.getMainHandStack().isOf(MagicWandMod.NUKE_WAND)
+                || p.getOffHandStack().isOf(MagicWandMod.NUKE_WAND))) {
+            p.sendMessage(Text.literal("Hold the Nuke Wand to use these upgrades.").formatted(Formatting.RED), true);
+            return;
+        }
+
         int lvl = level(p, id);
         if (lvl >= up.maxLevel()) {
             p.sendMessage(Text.literal(up.name() + " is already maxed.").formatted(Formatting.YELLOW), true);

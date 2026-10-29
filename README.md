@@ -47,3 +47,15 @@ Handy for testing: /xp add @s 50 levels
 |---|---|---|
 | Mana Potion | glass bottle + 2 lapis lazuli + glowstone dust (shapeless) | drink: +50 mana, returns the bottle |
 | Splash Mana Potion | mana potion + gunpowder (shapeless) | throw: +40 mana to everyone within 4 blocks of the splash |
+
+## Nuke Wand (creative only)
+
+No crafting recipe: take it from the Tools tab of the creative inventory. Survival players cannot use it.
+Its upgrade tab ("Nuke") only appears in the U menu while you are holding the wand.
+
+| Action | Effect | Mana |
+|---|---|---|
+| Right-click | Big Blast (power 6, TNT is 4) where you aim | 40 |
+| Sneak + right-click | Nuke (power 25), needs the Nuke upgrade | 100 |
+
+Upgrades: Blast Power (+2 per level), Incendiary (fire), Nuke (unlock), Nuke Yield (+5 per level).

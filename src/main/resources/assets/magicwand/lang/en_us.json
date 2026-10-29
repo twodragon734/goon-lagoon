@@ -9,5 +9,6 @@
   "key.magicwand.upgrades": "Open Upgrade Tree",
   "category.magicwand": "Magic Wands",
   "item.magicwand.mana_potion": "Mana Potion",
-  "item.magicwand.splash_mana_potion": "Splash Mana Potion"
+  "item.magicwand.splash_mana_potion": "Splash Mana Potion",
+  "item.magicwand.nuke_wand": "Nuke Wand"
 }

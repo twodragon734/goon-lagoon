@@ -3,7 +3,7 @@
   "id": "magicwand",
   "version": "${version}",
   "name": "Magic Wand",
-  "description": "Magic wands, spell scrolls, mana and an upgrade tree (press U).",
+  "description": "Wands, scrolls, mana, potions, an upgrade tree (press U) and a creative-only Nuke Wand.",
   "authors": [
     "You"
   ],

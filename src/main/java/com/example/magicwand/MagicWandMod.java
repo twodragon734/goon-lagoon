@@ -25,6 +25,7 @@ public class MagicWandMod implements ModInitializer {
     public static Item ICE_WAND;
     public static Item WIND_WAND;
     public static Item HEAL_WAND;
+    public static Item NUKE_WAND;
     public static Item SPEEDSTER_SCROLL;
     public static Item DRILL_SCROLL;
     public static Item MANA_POTION;
@@ -52,6 +53,7 @@ public class MagicWandMod implements ModInitializer {
         WIND_WAND = register("wind_wand", s -> new ElementWandItem(s, ElementWandItem.Kind.WIND));
         HEAL_WAND = register("heal_wand", s -> new ElementWandItem(s, ElementWandItem.Kind.HEAL));
 
+        NUKE_WAND = register("nuke_wand", NukeWandItem::new); // no recipe: creative inventory only
         SPEEDSTER_SCROLL = register("speedster_scroll", Rarity.RARE, s -> new ScrollItem(s, ScrollItem.Kind.SPEED));
         DRILL_SCROLL = register("drill_scroll", Rarity.RARE, s -> new ScrollItem(s, ScrollItem.Kind.DRILL));
 
@@ -77,6 +79,7 @@ public class MagicWandMod implements ModInitializer {
             entries.add(ICE_WAND);
             entries.add(WIND_WAND);
             entries.add(HEAL_WAND);
+            entries.add(NUKE_WAND);
             entries.add(SPEEDSTER_SCROLL);
             entries.add(DRILL_SCROLL);
             entries.add(MANA_POTION);

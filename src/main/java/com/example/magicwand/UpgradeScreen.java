@@ -9,6 +9,7 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /** The upgrade tree. Open it with the U key. */
@@ -16,14 +17,31 @@ public class UpgradeScreen extends Screen {
     private static Upgrades.Path selected = Upgrades.Path.MANA; // remembers your last tab
 
     private static final int PANEL_W = 420;
-    private static final int PANEL_H = 200;
-    private static final int ROW_H = 48;
+    private static final int PANEL_H = 224;
+    private static final int ROW_H = 46;
 
     private int left;
     private int top;
 
     public UpgradeScreen() {
         super(Text.literal("Upgrade Tree"));
+    }
+
+    /** The Nuke tab only exists while you are holding the Nuke Wand. */
+    private static boolean holdingNukeWand() {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        if (mc.player == null) return false;
+        return mc.player.getMainHandStack().isOf(MagicWandMod.NUKE_WAND)
+                || mc.player.getOffHandStack().isOf(MagicWandMod.NUKE_WAND);
+    }
+
+    private static List<Upgrades.Path> visiblePaths() {
+        List<Upgrades.Path> out = new ArrayList<>();
+        for (Upgrades.Path path : visiblePaths()) {
+            if (path == Upgrades.Path.NUKE && !holdingNukeWand()) continue;
+            out.add(path);
+        }
+        return out;
     }
 
     public void refresh() {
@@ -34,6 +52,10 @@ public class UpgradeScreen extends Screen {
     protected void init() {
         left = (this.width - PANEL_W) / 2;
         top = (this.height - PANEL_H) / 2;
+
+        if (selected == Upgrades.Path.NUKE && !holdingNukeWand()) {
+            selected = Upgrades.Path.MANA;
+        }
 
         // Tabs down the left side
         int ty = top + 24;
