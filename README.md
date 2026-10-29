@@ -33,3 +33,10 @@ Every spell costs mana; at 0 you can't cast.
 | Heal Wand | 25 |
 | Speedster Scroll | 40 |
 | Drill Scroll | 50 |
+
+## Upgrade tree (press U)
+
+Spend XP levels to unlock and improve powers. Each wand and scroll has its own path, plus a Mana path.
+The fireball is free; every other wand/scroll power must be unlocked first.
+Upgrades are saved in the world folder (magicwand_upgrades.json). Creative mode buys upgrades for free.
+Handy for testing: /xp add @s 50 levels

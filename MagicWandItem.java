@@ -16,9 +16,11 @@ import net.minecraft.world.World;
 
 public class MagicWandItem extends Item {
     // ---- Tweak these to taste ----
-    private static final int FIREBALL_COOLDOWN_TICKS = 10;   // 20 ticks = 1 second
+    private static final int FIREBALL_BASE_COOLDOWN_TICKS = 10; // 20 ticks = 1 second; -2 per Quick Fire level
     private static final int TELEPORT_COOLDOWN_TICKS = 40;
-    private static final double TELEPORT_MAX_DISTANCE = 12.0; // blocks
+    private static final double TELEPORT_BASE_DISTANCE = 12.0;  // blocks; +4 per Long Blink level
+    private static final int FIREBALL_MANA_COST = 10;
+    private static final int TELEPORT_MANA_COST = 25;
     // ------------------------------
 
     public MagicWandItem(Settings settings) {
@@ -27,20 +29,33 @@ public class MagicWandItem extends Item {
 
     @Override
     public ActionResult use(World world, PlayerEntity user, Hand hand) {
+        if (!(world instanceof ServerWorld sw)) {
+            return ActionResult.SUCCESS;
+        }
         ItemStack stack = user.getStackInHand(hand);
+        boolean sneaking = user.isSneaking();
 
-        if (user.isSneaking()) {
-            if (!world.isClient) {
-                teleport((ServerWorld) world, user);
+        if (sneaking && UpgradeManager.level(user, "teleport") < 1) {
+            UpgradeManager.sendLocked(user, "teleport");
+            return ActionResult.FAIL;
+        }
+
+        int cost = sneaking ? TELEPORT_MANA_COST : FIREBALL_MANA_COST;
+        if (!ManaManager.tryUse(user, cost)) {
+            return ActionResult.FAIL;
+        }
+
+        if (sneaking) {
+            double distance = TELEPORT_BASE_DISTANCE + 4.0 * UpgradeManager.level(user, "blink_range");
+            if (!teleport(sw, user, distance)) {
+                ManaManager.refund(user, cost); // fizzled, so no mana lost
             }
             user.getItemCooldownManager().set(stack, TELEPORT_COOLDOWN_TICKS);
         } else {
-            if (!world.isClient) {
-                shootFireball(world, user);
-            }
-            user.getItemCooldownManager().set(stack, FIREBALL_COOLDOWN_TICKS);
+            shootFireball(sw, user);
+            int cooldown = Math.max(2, FIREBALL_BASE_COOLDOWN_TICKS - 2 * UpgradeManager.level(user, "quick_fire"));
+            user.getItemCooldownManager().set(stack, cooldown);
         }
-
         return ActionResult.SUCCESS;
     }
 
@@ -56,13 +71,13 @@ public class MagicWandItem extends Item {
                 SoundCategory.PLAYERS, 1.0F, 1.0F);
     }
 
-    private void teleport(ServerWorld world, PlayerEntity user) {
+    /** Returns false if something blocked the teleport. */
+    private boolean teleport(ServerWorld world, PlayerEntity user, double maxDistance) {
         Vec3d look = user.getRotationVec(1.0F);
         Box box = user.getBoundingBox();
 
-        // Walk forward in half-block steps, remember the last spot that was clear.
         double bestDistance = 0;
-        for (double d = 0.5; d <= TELEPORT_MAX_DISTANCE; d += 0.5) {
+        for (double d = 0.5; d <= maxDistance; d += 0.5) {
             Box moved = box.offset(look.multiply(d));
             if (!world.isSpaceEmpty(user, moved)) {
                 break;
@@ -71,10 +86,9 @@ public class MagicWandItem extends Item {
         }
 
         if (bestDistance < 1.0) {
-            // Blocked right in front of you: fizzle.
             world.playSound(null, user.getBlockPos(), SoundEvents.BLOCK_FIRE_EXTINGUISH,
                     SoundCategory.PLAYERS, 0.8F, 1.2F);
-            return;
+            return false;
         }
 
         Vec3d from = user.getPos();
@@ -87,6 +101,7 @@ public class MagicWandItem extends Item {
 
         world.playSound(null, to.x, to.y, to.z, SoundEvents.ENTITY_ENDERMAN_TELEPORT,
                 SoundCategory.PLAYERS, 1.0F, 1.0F);
+        return true;
     }
 
     private void poof(ServerWorld world, Vec3d pos) {
