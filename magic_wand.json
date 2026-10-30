@@ -1,6 +1,17 @@
 {
-  "model": {
-    "type": "minecraft:model",
-    "model": "magicwand:item/magic_wand"
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "  P",
+    " B ",
+    "B  "
+  ],
+  "key": {
+    "P": "minecraft:ender_pearl",
+    "B": "minecraft:blaze_rod"
+  },
+  "result": {
+    "id": "magicwand:magic_wand",
+    "count": 1
   }
 }

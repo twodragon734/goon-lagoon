@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "GAG",
+    "GLG"
+  ],
+  "key": {
+    "G": "minecraft:gold_ingot",
+    "A": "minecraft:amethyst_shard",
+    "L": "minecraft:lapis_lazuli"
+  },
+  "result": {
+    "id": "magicwand:mana_crown",
+    "count": 1
+  }
+}

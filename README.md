@@ -76,3 +76,14 @@ Each trinket only counts once. Bonuses stack with each other and with the upgrad
 
 The Mana Crown and Mana Robe now have painted worn models (assets/magicwand/textures/entity/equipment/humanoid/)
 and give armor points: Crown 2, Robe 4. Change the numbers in MagicWandMod.java (the two armor(...) lines).
+
+## More scrolls (paper in the middle, 8 of the item around it)
+
+| Scroll | Surround with | Effect | Mana | Cooldown |
+|---|---|---|---|---|
+| Growth Scroll | bone meal | Bone meals every crop, sapling and grass block around you (radius 4) | 30 | 30 s |
+| Recall Scroll | ender pearls | Teleports you to your bed (or world spawn) | 60 | 2 min |
+| Clone Scroll | amethyst shards | Armor-stand decoy that hostile mobs attack; you turn invisible for 5 s | 40 | 45 s |
+| Bridge Scroll | cobblestone | A temporary 3-wide glass bridge in front of you (12 blocks, 15 s) | 35 | 15 s |
+
+Each needs its unlock upgrade first (Verdant Touch, Homeward, Mirror Image, Skybridge). The Spell Book picks them all up.

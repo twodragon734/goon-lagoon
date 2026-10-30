@@ -15,7 +15,12 @@ public final class Upgrades {
         WIND("Wind"),
         HEAL("Heal"),
         SPEEDSTER("Speedster"),
-        DRILL("Drill");
+        DRILL("Drill"),
+        GROWTH("Growth"),
+        RECALL("Recall"),
+        CLONE("Clone"),
+        BRIDGE("Bridge"),
+        NUKE("Nuke"); // only shown while holding the Nuke Wand
 
         public final String label;
 
@@ -74,7 +79,33 @@ public final class Upgrades {
             // DRILL SCROLL
             u("drill_bore", Path.DRILL, "Drill", "Unlocks the Drill Scroll.", null, 6),
             u("deep_bore", Path.DRILL, "Deep Bore", "+15 blocks of drill distance per level.", "drill_bore", 4, 6, 8),
-            u("wide_bore", Path.DRILL, "Wide Bore", "Wider tunnel, +0.5 radius per level.", "drill_bore", 6, 10)
+            u("wide_bore", Path.DRILL, "Wide Bore", "Wider tunnel, +0.5 radius per level.", "drill_bore", 6, 10),
+
+            // GROWTH SCROLL
+            u("verdant_touch", Path.GROWTH, "Verdant Touch", "Unlocks the Growth Scroll.", null, 5),
+            u("wide_bloom", Path.GROWTH, "Wide Bloom", "+2 blocks of growth radius per level.", "verdant_touch", 4, 6, 8),
+            u("overgrowth", Path.GROWTH, "Overgrowth", "Grows everything one extra time per level.", "verdant_touch", 5, 8),
+
+            // RECALL SCROLL
+            u("homeward", Path.RECALL, "Homeward", "Unlocks the Recall Scroll.", null, 6),
+            u("quick_return", Path.RECALL, "Quick Return", "Recall cooldown 20% shorter per level.", "homeward", 4, 6, 8),
+            u("safe_return", Path.RECALL, "Safe Return", "Get Resistance and Regeneration after recalling.", "homeward", 6),
+
+            // CLONE SCROLL
+            u("mirror_image", Path.CLONE, "Mirror Image", "Unlocks the Clone Scroll.", null, 6),
+            u("twin_clones", Path.CLONE, "Twin Clones", "+1 extra clone per level.", "mirror_image", 8, 12),
+            u("lasting_illusion", Path.CLONE, "Lasting Illusion", "Clones last 5 seconds longer per level.", "mirror_image", 4, 6, 8),
+
+            // BRIDGE SCROLL
+            u("skybridge", Path.BRIDGE, "Skybridge", "Unlocks the Bridge Scroll.", null, 5),
+            u("long_bridge", Path.BRIDGE, "Long Bridge", "+4 blocks of bridge length per level.", "skybridge", 4, 6, 8),
+            u("lasting_bridge", Path.BRIDGE, "Lasting Bridge", "Bridge lasts 5 seconds longer per level.", "skybridge", 3, 5, 7),
+
+            // NUKE WAND (hidden unless you are holding the Nuke Wand)
+            u("blast_power", Path.NUKE, "Blast Power", "+2 explosion power per level for the Big Blast.", null, 5, 8, 12),
+            u("incendiary", Path.NUKE, "Incendiary", "Blasts and nukes set the ground on fire.", null, 6),
+            u("nuke", Path.NUKE, "Nuke", "Unlocks sneak + right-click: a huge nuclear blast.", null, 15),
+            u("nuke_yield", Path.NUKE, "Nuke Yield", "+5 nuke explosion power per level.", "nuke", 12, 18)
     );
     // ----------------------------------
 
