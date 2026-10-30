@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "magicwand:mana_potion",
+    "minecraft:gunpowder"
+  ],
+  "result": {
+    "id": "magicwand:splash_mana_potion",
+    "count": 1
+  }
+}

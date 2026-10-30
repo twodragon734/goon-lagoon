@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "  P",
+    " B ",
+    "B  "
+  ],
+  "key": {
+    "P": "minecraft:lightning_rod",
+    "B": "minecraft:blaze_rod"
+  },
+  "result": {
+    "id": "magicwand:lightning_wand",
+    "count": 1
+  }
+}

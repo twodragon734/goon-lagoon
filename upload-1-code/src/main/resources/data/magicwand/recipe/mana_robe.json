@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "L L",
+    "LAL",
+    "LLL"
+  ],
+  "key": {
+    "L": "minecraft:lapis_lazuli",
+    "A": "minecraft:amethyst_shard"
+  },
+  "result": {
+    "id": "magicwand:mana_robe",
+    "count": 1
+  }
+}
