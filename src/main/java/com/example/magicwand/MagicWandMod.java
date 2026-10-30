@@ -1,9 +1,13 @@
 package com.example.magicwand;
 
+import com.google.gson.JsonParser;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.JsonOps;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.component.type.ConsumableComponents;
 import net.minecraft.component.type.EquippableComponent;
 import net.minecraft.entity.EquipmentSlot;
@@ -52,6 +56,48 @@ public class MagicWandMod implements ModInitializer {
         return Registry.register(Registries.ITEM, key, factory.apply(settings));
     }
 
+    /** Reads a component from JSON. Returns null instead of crashing if it can't be read. */
+    private static <T> T parse(Codec<T> codec, String json) {
+        try {
+            return codec.parse(JsonOps.INSTANCE, JsonParser.parseString(json)).result().orElse(null);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Makes an item wearable in the given slot, with its worn model (assets/magicwand/equipment/NAME.json
+     * and textures/entity/equipment/humanoid/NAME.png) and some armor points.
+     */
+    private static Item.Settings armor(Item.Settings s, String slot, String name, double armorPoints) {
+        String model = MOD_ID + ":" + name;
+
+        // "asset_id" and "model" are the same field in different 1.21.x versions, so give both.
+        EquippableComponent eq = parse(EquippableComponent.CODEC,
+                "{\"slot\":\"" + slot + "\",\"asset_id\":\"" + model + "\",\"model\":\"" + model + "\"}");
+        if (eq == null) {
+            eq = parse(EquippableComponent.CODEC, "{\"slot\":\"" + slot + "\"}"); // wearable but no worn model
+        }
+        if (eq != null) {
+            s.component(DataComponentTypes.EQUIPPABLE, eq);
+        }
+
+        String modifier = "{\"type\":\"minecraft:armor\",\"id\":\"" + model + "\",\"amount\":" + armorPoints
+                + ",\"operation\":\"add_value\",\"slot\":\"" + slot + "\"}";
+        AttributeModifiersComponent attrs = parse(AttributeModifiersComponent.CODEC,
+                "{\"modifiers\":[" + modifier + "]}");
+        if (attrs == null) {
+            attrs = parse(AttributeModifiersComponent.CODEC, "[" + modifier + "]");
+        }
+        if (attrs != null) {
+            s.component(DataComponentTypes.ATTRIBUTE_MODIFIERS, attrs);
+        }
+
+        // No enchant glow, so the painted detail on the worn model stays visible.
+        s.component(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, false);
+        return s;
+    }
+
     @Override
     public void onInitialize() {
         MAGIC_WAND = register("magic_wand", MagicWandItem::new);
@@ -75,10 +121,8 @@ public class MagicWandMod implements ModInitializer {
         SPELL_BOOK = register("spell_book", Rarity.EPIC, SpellBookItem::new);
         MANA_CHARM = register("mana_charm", Rarity.RARE, Item::new);
         MANA_RING = register("mana_ring", Rarity.RARE, Item::new);
-        MANA_CROWN = register("mana_crown", Rarity.RARE, s -> new Item(
-                s.component(DataComponentTypes.EQUIPPABLE, EquippableComponent.builder(EquipmentSlot.HEAD).build())));
-        MANA_ROBE = register("mana_robe", Rarity.RARE, s -> new Item(
-                s.component(DataComponentTypes.EQUIPPABLE, EquippableComponent.builder(EquipmentSlot.CHEST).build())));
+        MANA_CROWN = register("mana_crown", Rarity.RARE, s -> new Item(armor(s, "head", "mana_crown", 2.0)));
+        MANA_ROBE = register("mana_robe", Rarity.RARE, s -> new Item(armor(s, "chest", "mana_robe", 4.0)));
 
         DrillManager.init();
 

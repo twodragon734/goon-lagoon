@@ -71,3 +71,8 @@ Upgrades: Blast Power (+2 per level), Incendiary (fire), Nuke (unlock), Nuke Yie
 | Mana Ring | gold ingots + lapis | +1 mana/sec regen while anywhere in your inventory |
 
 Each trinket only counts once. Bonuses stack with each other and with the upgrade tree.
+
+## Mana armor models
+
+The Mana Crown and Mana Robe now have painted worn models (assets/magicwand/textures/entity/equipment/humanoid/)
+and give armor points: Crown 2, Robe 4. Change the numbers in MagicWandMod.java (the two armor(...) lines).
