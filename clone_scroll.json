@@ -1,17 +1,6 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "category": "equipment",
-  "pattern": [
-    "SSS",
-    "SPS",
-    "SSS"
-  ],
-  "key": {
-    "S": "minecraft:amethyst_shard",
-    "P": "minecraft:paper"
-  },
-  "result": {
-    "id": "magicwand:clone_scroll",
-    "count": 1
+  "model": {
+    "type": "minecraft:model",
+    "model": "magicwand:item/clone_scroll"
   }
 }

@@ -1,17 +1,6 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "category": "equipment",
-  "pattern": [
-    " L ",
-    "G G",
-    " G "
-  ],
-  "key": {
-    "G": "minecraft:gold_ingot",
-    "L": "minecraft:lapis_lazuli"
-  },
-  "result": {
-    "id": "magicwand:mana_ring",
-    "count": 1
+  "model": {
+    "type": "minecraft:model",
+    "model": "magicwand:item/mana_ring"
   }
 }

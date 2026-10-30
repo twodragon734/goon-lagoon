@@ -1,17 +1,6 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "category": "equipment",
-  "pattern": [
-    "  P",
-    " B ",
-    "B  "
-  ],
-  "key": {
-    "P": "minecraft:blue_ice",
-    "B": "minecraft:blaze_rod"
-  },
-  "result": {
-    "id": "magicwand:ice_wand",
-    "count": 1
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "magicwand:item/ice_wand"
   }
 }

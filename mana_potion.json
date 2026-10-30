@@ -1,14 +1,6 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "category": "misc",
-  "ingredients": [
-    "minecraft:glass_bottle",
-    "minecraft:lapis_lazuli",
-    "minecraft:lapis_lazuli",
-    "minecraft:glowstone_dust"
-  ],
-  "result": {
-    "id": "magicwand:mana_potion",
-    "count": 1
+  "model": {
+    "type": "minecraft:model",
+    "model": "magicwand:item/mana_potion"
   }
 }

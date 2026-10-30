@@ -7,5 +7,17 @@
   "item.magicwand.speedster_scroll": "Speedster Scroll",
   "item.magicwand.drill_scroll": "Drill Scroll",
   "key.magicwand.upgrades": "Open Upgrade Tree",
-  "category.magicwand": "Magic Wands"
+  "category.magicwand": "Magic Wands",
+  "item.magicwand.mana_potion": "Mana Potion",
+  "item.magicwand.splash_mana_potion": "Splash Mana Potion",
+  "item.magicwand.nuke_wand": "Nuke Wand",
+  "item.magicwand.spell_book": "Spell Book",
+  "item.magicwand.mana_charm": "Mana Charm",
+  "item.magicwand.mana_ring": "Mana Ring",
+  "item.magicwand.mana_crown": "Mana Crown",
+  "item.magicwand.mana_robe": "Mana Robe",
+  "item.magicwand.growth_scroll": "Growth Scroll",
+  "item.magicwand.recall_scroll": "Recall Scroll",
+  "item.magicwand.clone_scroll": "Clone Scroll",
+  "item.magicwand.bridge_scroll": "Bridge Scroll"
 }
