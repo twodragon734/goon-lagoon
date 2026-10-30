@@ -10,5 +10,10 @@
   "category.magicwand": "Magic Wands",
   "item.magicwand.mana_potion": "Mana Potion",
   "item.magicwand.splash_mana_potion": "Splash Mana Potion",
-  "item.magicwand.nuke_wand": "Nuke Wand"
+  "item.magicwand.nuke_wand": "Nuke Wand",
+  "item.magicwand.spell_book": "Spell Book",
+  "item.magicwand.mana_charm": "Mana Charm",
+  "item.magicwand.mana_ring": "Mana Ring",
+  "item.magicwand.mana_crown": "Mana Crown",
+  "item.magicwand.mana_robe": "Mana Robe"
 }

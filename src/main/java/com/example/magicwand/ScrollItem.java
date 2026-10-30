@@ -42,7 +42,14 @@ public class ScrollItem extends Item {
         if (!(world instanceof ServerWorld sw)) {
             return ActionResult.SUCCESS;
         }
-        ItemStack stack = user.getStackInHand(hand);
+        return cast(sw, user, user.getStackInHand(hand));
+    }
+
+    /** Casts this scroll. Also used by the Spell Book. The scroll is never consumed. */
+    public ActionResult cast(ServerWorld sw, PlayerEntity user, ItemStack stack) {
+        if (user.getItemCooldownManager().isCoolingDown(stack)) {
+            return ActionResult.FAIL;
+        }
 
         String required = kind == Kind.SPEED ? "swift_step" : "drill_bore";
         if (UpgradeManager.level(user, required) < 1) {

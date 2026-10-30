@@ -59,3 +59,15 @@ Its upgrade tab ("Nuke") only appears in the U menu while you are holding the wa
 | Sneak + right-click | Nuke (power 25), needs the Nuke upgrade | 100 |
 
 Upgrades: Blast Power (+2 per level), Incendiary (fire), Nuke (unlock), Nuke Yield (+5 per level).
+
+## Spell Book, mana armor and trinkets
+
+| Item | Recipe | Effect |
+|---|---|---|
+| Spell Book | book + 2 amethyst shards + 2 lapis (shapeless) | Pulls in every scroll in your inventory. Right-click: cast selected scroll. Sneak + right-click: next scroll. Scrolls must stay in your inventory. |
+| Mana Crown (helmet slot) | gold ingots, amethyst shard, lapis (see recipe file) | +30 max mana while worn |
+| Mana Robe (chestplate slot) | 7 lapis + amethyst shard | +1.5 mana/sec regen while worn |
+| Mana Charm | string, lapis, amethyst | +20 max mana while anywhere in your inventory |
+| Mana Ring | gold ingots + lapis | +1 mana/sec regen while anywhere in your inventory |
+
+Each trinket only counts once. Bonuses stack with each other and with the upgrade tree.

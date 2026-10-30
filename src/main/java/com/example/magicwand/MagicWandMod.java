@@ -5,6 +5,8 @@ import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ConsumableComponents;
+import net.minecraft.component.type.EquippableComponent;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.Items;
@@ -29,6 +31,11 @@ public class MagicWandMod implements ModInitializer {
     public static Item SPEEDSTER_SCROLL;
     public static Item DRILL_SCROLL;
     public static Item MANA_POTION;
+    public static Item SPELL_BOOK;
+    public static Item MANA_CHARM;
+    public static Item MANA_RING;
+    public static Item MANA_CROWN;
+    public static Item MANA_ROBE;
     public static Item SPLASH_MANA_POTION;
 
     private static Item register(String name, Function<Item.Settings, Item> factory) {
@@ -65,6 +72,14 @@ public class MagicWandMod implements ModInitializer {
         SPLASH_MANA_POTION = register("splash_mana_potion", Rarity.UNCOMMON,
                 s -> new SplashManaPotionItem(s.maxCount(16)));
 
+        SPELL_BOOK = register("spell_book", Rarity.EPIC, SpellBookItem::new);
+        MANA_CHARM = register("mana_charm", Rarity.RARE, Item::new);
+        MANA_RING = register("mana_ring", Rarity.RARE, Item::new);
+        MANA_CROWN = register("mana_crown", Rarity.RARE, s -> new Item(
+                s.component(DataComponentTypes.EQUIPPABLE, EquippableComponent.builder(EquipmentSlot.HEAD).build())));
+        MANA_ROBE = register("mana_robe", Rarity.RARE, s -> new Item(
+                s.component(DataComponentTypes.EQUIPPABLE, EquippableComponent.builder(EquipmentSlot.CHEST).build())));
+
         DrillManager.init();
 
         PayloadTypeRegistry.playS2C().register(ManaPayload.ID, ManaPayload.CODEC);
@@ -82,6 +97,11 @@ public class MagicWandMod implements ModInitializer {
             entries.add(NUKE_WAND);
             entries.add(SPEEDSTER_SCROLL);
             entries.add(DRILL_SCROLL);
+            entries.add(SPELL_BOOK);
+            entries.add(MANA_CROWN);
+            entries.add(MANA_ROBE);
+            entries.add(MANA_CHARM);
+            entries.add(MANA_RING);
             entries.add(MANA_POTION);
             entries.add(SPLASH_MANA_POTION);
         });
